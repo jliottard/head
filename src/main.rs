@@ -1,9 +1,9 @@
 use std::io;
 use std::fs;
-use clap::builder::ValueParserFactory;
 use clap::{arg, command, Arg, ArgAction, value_parser};
 
 fn main() {
+    // Handle arguments
     let matches = command!()
         .arg(
             Arg::new("file_path").action(ArgAction::Append)
@@ -32,14 +32,16 @@ fn main() {
         .map(|v| v.as_str())
         .collect::<Vec<_>>();
     if file_paths.len() > 0 {
-        // read the file given by the file path argument
+        // read the file given by the file path(s) argument
         for file_path in file_paths {
+            contents.push_str("==> ");
+            contents.push_str(file_path);
+            contents.push_str(" <==\n");
             let text = &fs::read_to_string(file_path)
                 .expect("Should have been able to read the file\n");
             if let Some(bytes_count) = matches.get_one::<u32>("count") {
                 if *bytes_count <= text.len().try_into().unwrap() {
-                    // contents.push_str(&contents[..*bytes_count as usize]);
-                    contents = text[..*bytes_count as usize].to_string();
+                    contents.push_str(&text[..*bytes_count as usize].to_string());
                 }
             } else {
                 let lines_number = matches.get_one::<u32>("number");
@@ -58,6 +60,7 @@ fn main() {
                     line_index = line_index + 1;
                 }
             }
+            contents.push('\n');
         }
     } else {
         // read the standard input as text input
@@ -65,6 +68,6 @@ fn main() {
             .read_line(&mut contents)
             .expect("Failed to read line\n");
     }
-
-    println!("{contents}");
+    print!("{contents}");
 }
+
