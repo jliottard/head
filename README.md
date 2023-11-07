@@ -4,8 +4,8 @@ My implementation of the Unix utility head, that prints the contents of a file.
 # Features
 Support for:
 - standard input to print
-- n argument to display an limited number of lines
-- c argument to display an limited number of bytes
+- *n* arguments to display an limited number of lines
+- *c* arguments to display an limited number of bytes
 - multiple files to print
 
 # Usages
